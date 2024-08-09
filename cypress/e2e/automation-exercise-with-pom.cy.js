@@ -1,49 +1,20 @@
 /// <reference types="cypress" />
 
+import signup from "../../pages/signup";
+
+
 describe('Automation Exercise', () => {
-    it('Test Case 1: Register User', () => {
-        const timestamp = new Date().getTime()
-        const signUpName = 'TesterQA'
-
-        cy.visit('https://automationexercise.com')
-
-        cy.contains('Features Items').should('be.visible')
-        cy.contains('Signup').click()
-
-        cy.get('[data-qa="signup-name"]').type(signUpName)
-        cy.get('[data-qa="signup-email"]').type(`automation${timestamp}@mail.com`)
-        cy.contains('button', 'Signup').click()
-
-        cy.get('input[type=radio]').check('Mrs')
-
-        cy.get('[type=password]').type('12345', { log: false })
-
-        cy.get('[data-qa="days"]').select('15')
-        cy.get('[data-qa="months"]').select('December')
-        cy.get('[data-qa="years"]').select('1997')
-
-        cy.get('input[type="checkbox"]#newsletter').check()
-        cy.get('input[type="checkbox"]#optin').check()
-
-        cy.get('[data-qa="first_name"]').type('Tester')
-        cy.get('[data-qa="last_name"]').type('Engineer')
-        cy.get('[data-qa="company"]').type('Test Inc.')
-        cy.get('[data-qa="address"]').type('Street name')
-        cy.get('[data-qa="country"]').select('United States')
-        cy.get('[data-qa="state"]').type('California')
-        cy.get('[data-qa="city"]').type('Los Angeles')
-        cy.get('[data-qa="zipcode"]').type('90001')
-        cy.get('[data-qa="mobile_number"]').type('111 222 333')
-
-        cy.get('[data-qa="create-account"]').click()
-
+    it.only('Test Case 1: Register User', () => {
+        signup.fillForm()
+        
         cy.url().should('includes', 'account_created')
         cy.get('[data-qa="account-created"]').should('be.visible')
 
         cy.get('[data-qa="continue-button"]').click()
 
-        cy.contains(`Logged in as ${signUpName}`).should('be.visible')
-
+        cy.get('i.fa-user').parent()
+            .should('be.visible')
+            .and('contain', Cypress.env('signUpName'))
     });
 
     it('Test Case 2: Login User with correct email and password', () => {
@@ -58,7 +29,9 @@ describe('Automation Exercise', () => {
         cy.get('[data-qa="login-password"]').type('12345', { log: false })
         cy.get('[data-qa="login-button"]').click()
 
-        cy.contains(`Logged in as TesterQA`).should('be.visible')
+        cy.get('i.fa-user').parent()
+            .should('be.visible')
+            .and('contain', Cypress.env('signUpName'))
     });
 
     // OK
