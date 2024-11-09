@@ -1,0 +1,29 @@
+# CI de Nível 01 - Disparo manual a partir de 1 clique
+# nome que vai aparacer nas opções de pipe
+name: 'Execução Manual'
+
+# triggers OU gatilhos de execução
+ # gatilho de exec manual = workflow_dispatch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  e2e-tests:
+    # maquina que o job vai executar
+    runs-on: ['ubuntu-latest']
+    # passo a passo das acoes do job
+    steps: 
+      - uses: actions/checkout@v4
+ 
+      - name: Instalando dependências
+        run: npm install
+
+      - name: Testes E2E (end-to-end)
+        run: npx cypress run
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+         name: relatorio-de-testes
+         path: ./cypress-report
